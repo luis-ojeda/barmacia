@@ -17,45 +17,56 @@
 			}
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content=" initial-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" /> -->
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<!-- <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script> -->
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcL2cxlpbqZe33B7lHNYDWjQbgKBcE36Q&sensor=false"></script>
 <script>
 	document.addEventListener("deviceready", onDeviceReady, false); //creates a listener that waits for the deviceready event and then fires onDevice ready function
-
+	var map;
+	var marcador;
 	function onDeviceReady() { 
 		startMap(); //runs the startCompass function
 	}
 
 	function startMap() {
-		
+		var latlng = new google.maps.LatLng(-33.03934, -71.60114);
 		var options = {
 			zoom : 10, //sets the compass heading to be updated every 50 milliseconds
-			center: new google.maps.LatLng(-33.03934, -71.60114),
+			center: latlng,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-		var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+		map = new google.maps.Map(document.getElementById('map_canvas'), options);
 		//alert("asd");
-		//navigator.compass.watchHeading(onSuccess, onError, options); //gets the compass heading from device and passes heading to onSuccess function
+		
+		marcador = new google.maps.Marker({
+			position: latlng,
+			map: map
+		});
 	}
-
-	// function onSuccess(heading) {//device s magnetic heading is passed to heading variable
-// 
-		// $("#needle").rotate(-heading.magneticHeading); //jquery function that gets the #needle id and rotates it minus the current heading
-	// }
-// 
-	// function onError(compassError) { //if there is an error the error will be passed to onError in the compassError variable
-		// alert('Compass error: ' + compassError.code); //displays an alert with the error code
-	// }
+	function mostrarUbicacion(){
+		navigator.geolocation.getCurrentPosition(lecturaGPS, errorGPS);
+	}
+	
+	function lecturaGPS (ubicacion) {
+		var miubicacion = new google.maps.LatLng(ubicacion.coords.latitude, ubicacion.coords.longitude)
+		map.setCenter(miubicacion);
+		marcador.setPosition(miubicacion);
+	}
+	
+	function errorGPS () {
+	  	alert("no puedo encontrarte :C");
+	}
+	
 </script>
 
 </head>
 	<body onload="startMap()">
-		<div id="map_canvas" style="width: 100%; height: 100%">asdas</div>
+		<div id="map_canvas" style="width: 100%; height: 90%">asdas</div>
+		<button onclick="mostrarUbicacion()">Mostrar mi ubicación</button>
 		
 	</body>
 </html>
