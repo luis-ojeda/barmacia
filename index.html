@@ -3,21 +3,18 @@
 	<title>&nbsp;</title>
 	<head>
 		<style>
-			#compass {
-
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				z-index: 1;
+			html {
+				height: 100%;
 			}
-			#needle {
-
-				position: absolute;
-				top: 8px;
-				left: 98px;
-				z-index: 10;
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
 			}
-
+			#map_canvas {
+				height: 100%;
+				width: 100%;
+			}
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,35 +23,39 @@
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-		<script src="jqRotate/jqRotate.js"></script>
-	</head>
-	<body>
-		<img src="http://nathanhedglin.us/images/compass.png" id="compass">
-		<img src="http://nathanhedglin.us/images/needle.png" id="needle">
-	</body>
-</html>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcL2cxlpbqZe33B7lHNYDWjQbgKBcE36Q&sensor=false"></script>
 <script>
 	document.addEventListener("deviceready", onDeviceReady, false); //creates a listener that waits for the deviceready event and then fires onDevice ready function
 
 	function onDeviceReady() { 
-		startCompass(); //runs the startCompass function
+		startMap(); //runs the startCompass function
 	}
 
-	function startCompass() {
-
+	function startMap() {
+		
 		var options = {
-			frequency : 50 //sets the compass heading to be updated every 50 milliseconds
+			zoom : 10, //sets the compass heading to be updated every 50 milliseconds
+			center: new google.maps.LatLng(-33.03934, -71.60114),
+			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-
-		navigator.compass.watchHeading(onSuccess, onError, options); //gets the compass heading from device and passes heading to onSuccess function
+		var map = new google.maps.Map(document.getElementById('map_canvas'), options);
+		//alert("asd");
+		//navigator.compass.watchHeading(onSuccess, onError, options); //gets the compass heading from device and passes heading to onSuccess function
 	}
 
-	function onSuccess(heading) {//device s magnetic heading is passed to heading variable
-
-		$("#needle").rotate(-heading.magneticHeading); //jquery function that gets the #needle id and rotates it minus the current heading
-	}
-
-	function onError(compassError) { //if there is an error the error will be passed to onError in the compassError variable
-		alert('Compass error: ' + compassError.code); //displays an alert with the error code
-	}
+	// function onSuccess(heading) {//device s magnetic heading is passed to heading variable
+// 
+		// $("#needle").rotate(-heading.magneticHeading); //jquery function that gets the #needle id and rotates it minus the current heading
+	// }
+// 
+	// function onError(compassError) { //if there is an error the error will be passed to onError in the compassError variable
+		// alert('Compass error: ' + compassError.code); //displays an alert with the error code
+	// }
 </script>
+
+</head>
+	<body onload="startMap()">
+		<div id="map_canvas" style="width: 100%; height: 100%">asdas</div>
+		
+	</body>
+</html>
